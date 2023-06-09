@@ -10,6 +10,7 @@ class MockWorld : public IWorld {
 public:
     MOCK_METHOD(Location2D, GetExtent, (), (const, override));
     MOCK_METHOD(std::string&, GetContentRef, (), (override));
+    MOCK_METHOD(void, Draw, (), (const, override));
 };
 
 TEST(TestPlayerWorldInteraction, PlayerWorldInteraction) 
@@ -18,7 +19,7 @@ TEST(TestPlayerWorldInteraction, PlayerWorldInteraction)
 
     // Classes instantiation
     std::unique_ptr<MockWorld> world = std::make_unique<MockWorld>();
-    std::unique_ptr<Player> player = std::make_unique<Player>(Location2D{ 1, 2 }, world.get());
+    std::unique_ptr<Player> player = std::make_unique<Player>(Location2D{ 1, 1 }, world.get());
 
     // Setting default values to called methods
     ON_CALL(*world, GetExtent).WillByDefault(Return(Location2D{ 3, 3 }));
@@ -31,6 +32,9 @@ TEST(TestPlayerWorldInteraction, PlayerWorldInteraction)
 
     // Invoke the method being tested
     player->UpdateWorldLocation({ 1, 0 });
+
+    // Assertion
+    ASSERT_TRUE(player->GetLocation() == Location2D( 1, 1 ));
 }
 
 // Run the tests

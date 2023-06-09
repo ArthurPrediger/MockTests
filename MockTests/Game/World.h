@@ -21,7 +21,7 @@ public:
 	{
 		return extent_;
 	}
-	std::string& GetContentRef()
+	std::string& GetContentRef() override
 	{
 		return content_;
 	}
