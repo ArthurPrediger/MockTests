@@ -11,15 +11,15 @@ class GameLoop
 {
 public:
 	GameLoop();
-	GameLoop(IWorld* world, IGameStatus* game_status, IPlayer* player, IComplementsManager* comps_manager);
+	GameLoop(std::shared_ptr<IWorld> world, std::shared_ptr<IGameStatus> game_status, std::shared_ptr<IPlayer> player, std::shared_ptr<IComplementsManager> comps_manager);
 	~GameLoop();
 
 	void Start();
 	void Run();
 
 private:
-	std::unique_ptr<IWorld> world_;
-	std::unique_ptr<IGameStatus> game_status_;
-	std::unique_ptr<IPlayer> player_;
-	std::unique_ptr<IComplementsManager> comps_manager_;
+	std::shared_ptr<IWorld> world_;
+	std::shared_ptr<IGameStatus> game_status_;
+	std::shared_ptr<IPlayer> player_;
+	std::shared_ptr<IComplementsManager> comps_manager_;
 };

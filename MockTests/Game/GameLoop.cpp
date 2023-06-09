@@ -18,7 +18,7 @@ GameLoop::GameLoop()
 {
 }
 
-GameLoop::GameLoop(IWorld* world, IGameStatus* game_status, IPlayer* player, IComplementsManager* comps_manager)
+GameLoop::GameLoop(std::shared_ptr<IWorld> world, std::shared_ptr<IGameStatus> game_status, std::shared_ptr<IPlayer> player, std::shared_ptr<IComplementsManager> comps_manager)
 	:
 	world_(world),
 	game_status_(game_status),
