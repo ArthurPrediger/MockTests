@@ -18,6 +18,15 @@ GameLoop::GameLoop()
 {
 }
 
+GameLoop::GameLoop(IWorld* world, IGameStatus* game_status, IPlayer* player, IComplementsManager* comps_manager)
+	:
+	world_(std::make_unique<World>(world)),
+	game_status_(std::make_unique<GameStatus>(game_status)),
+	player_(std::make_unique<Player>(player)),
+	comps_manager_(std::make_unique<ComplementsManager>(comps_manager))
+{
+}
+
 GameLoop::~GameLoop()
 {
 }

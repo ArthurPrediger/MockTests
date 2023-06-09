@@ -6,6 +6,7 @@
 class IWorld
 {
 public:
+	virtual void Draw() const = 0;
 	virtual Location2D GetExtent() const = 0;
 	virtual std::string& GetContentRef() = 0;
 };
@@ -15,7 +16,7 @@ class World : public IWorld
 public:
 	World(Location2D extent);
 
-	void Draw() const;
+	void Draw() const override;
 	Location2D GetExtent() const override
 	{
 		return extent_;

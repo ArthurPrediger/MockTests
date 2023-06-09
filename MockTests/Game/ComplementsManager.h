@@ -8,12 +8,18 @@ class IWorld;
 class IGameStatus;
 class IPlayer;
 
-class ComplementsManager
+class IComplementsManager
+{
+public:
+	virtual void UpdateComplementsLifetime(float dt) = 0;
+};
+
+class ComplementsManager : public IComplementsManager
 {
 public:
 	ComplementsManager(IWorld* world, IGameStatus* game_status, IPlayer* player);
 
-	void UpdateComplementsLifetime(float dt);
+	void UpdateComplementsLifetime(float dt) override;
 
 private:
 	struct Complement
