@@ -21,7 +21,7 @@ public:
 
 	void UpdateComplementsLifetime(float dt) override;
 
-private:
+public:
 	struct Complement
 	{
 		Location2D loc_;
@@ -31,11 +31,12 @@ private:
 		bool dirty_ = false;
 	};
 
+	std::vector<Complement> complements;
+
 private:
 	IWorld* world_;
 	IGameStatus* game_status_;
 	IPlayer* player_;
-	std::vector<Complement> complements;
 	float spawn_rate_;
 	float time_since_last_spawn_;
 
