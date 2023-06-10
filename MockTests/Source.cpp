@@ -69,7 +69,7 @@ TEST(TestGameLoop, GameLoopMemberCalls)
     // Classes instantiation
     std::shared_ptr<MockWorld> world = std::make_shared<MockWorld>();
     std::shared_ptr<MockGameStatus> game_status = std::make_shared<MockGameStatus>();
-    std::shared_ptr<MockPlayer> player = std::make_shared<MockPlayer>();
+    std::shared_ptr<NiceMock<MockPlayer>> player = std::make_shared<NiceMock<MockPlayer>>();
     std::shared_ptr<MockComplementsManager> comps_manager = std::make_shared<MockComplementsManager>();
 
     std::unique_ptr<GameLoop> GL = std::make_unique<GameLoop>(world, game_status, player, comps_manager);
@@ -78,6 +78,7 @@ TEST(TestGameLoop, GameLoopMemberCalls)
     ON_CALL(*world, GetExtent).WillByDefault(Return(Location2D{ 3, 3 }));
     std::string default_value = "default value";
     ON_CALL(*world, GetContentRef).WillByDefault(ReturnRef(default_value));
+    ON_CALL(*world, Draw).WillByDefault([]() {});
     
     int player_lifes = 3;
     ON_CALL(*game_status, IsGameOver).WillByDefault(
@@ -91,11 +92,42 @@ TEST(TestGameLoop, GameLoopMemberCalls)
 
     // Set expectations on mock methods
     EXPECT_CALL(*game_status, IsGameOver()).Times(5);
-    EXPECT_CALL(*player, UpdateWorldLocation(Location2D{0, 0})).Times(5);
+    EXPECT_CALL(*game_status, Draw()).Times(4);
     EXPECT_CALL(*world, Draw()).Times(4);
+    EXPECT_CALL(*player, UpdateWorldLocation(Location2D{ 0, 0 })).Times(5);
+    EXPECT_CALL(*comps_manager, UpdateComplementsLifetime).Times(4);
 
     // Invoke the method being tested
-    GL->Run();
+    GL->Run();   
+}    
+
+TEST(TestGameLoop, GameLoopDrawFinalStatus)
+{
+    using namespace testing;
+
+    // Classes instantiation
+    std::shared_ptr<MockWorld> world = std::make_shared<MockWorld>();
+    std::shared_ptr<MockGameStatus> game_status = std::make_shared<MockGameStatus>();
+    std::shared_ptr<NiceMock<MockPlayer>> player = std::make_shared<NiceMock<MockPlayer>>();
+    std::shared_ptr<MockComplementsManager> comps_manager = std::make_shared<MockComplementsManager>();
+
+    std::unique_ptr<GameLoop> GL = std::make_unique<GameLoop>(world, game_status, player, comps_manager);
+
+    // Setting default values to called methods
+    int player_lifes = -1;
+    ON_CALL(*game_status, IsGameOver).WillByDefault(
+        [player_lifes]() mutable
+        {
+            return player_lifes-- < 0;
+        });
+
+    // Set expectations on mock methods
+    EXPECT_CALL(*game_status, IsGameOver()).Times(1);
+    EXPECT_CALL(*game_status, Draw()).Times(1); 
+    EXPECT_CALL(*player, UpdateWorldLocation(Location2D{ 0, 0 })).Times(1);
+
+    // Invoke the method being tested
+    GL->Start();
 }
 
 // Run the tests

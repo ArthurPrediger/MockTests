@@ -9,6 +9,8 @@
 #include <chrono>
 #include <thread>
 
+constexpr bool IS_TEST = true;
+
 GameLoop::GameLoop()
 	:
 	world_(std::make_unique<World>(Location2D{ 17, 17 })),
@@ -33,27 +35,36 @@ GameLoop::~GameLoop()
 
 void GameLoop::Start()
 {
-	std::cout << "\n\n\t TEN'S COMPLEMENT \n\n\n\n";
-	std::cout << "    Match the numbers in order \n    their sum is equal to ten.\n\n";
-	std::cout << "    CONTROLS: \n";
-	std::cout << "    A - Move left\n";
-	std::cout << "    D - Move right\n";
-	std::cout << "    UP - Increase number\n";
-	std::cout << "    DOWN - Decrease number\n\n";
-	std::cout << "    Press enter to start\n";
-	
-	while (!(GetAsyncKeyState(VK_RETURN) & 0x8000));
+	if constexpr(!IS_TEST)
+	{
+		std::cout << "\n\n\t TEN'S COMPLEMENT \n\n\n\n";
+		std::cout << "    Match the numbers in order \n    their sum is equal to ten.\n\n";
+		std::cout << "    CONTROLS: \n";
+		std::cout << "    A - Move left\n";
+		std::cout << "    D - Move right\n";
+		std::cout << "    UP - Increase number\n";
+		std::cout << "    DOWN - Decrease number\n\n";
+		std::cout << "    Press enter to start\n";
 
-	std::system("cls");
+		while (!(GetAsyncKeyState(VK_RETURN) & 0x8000));
+
+		std::system("cls");
+	}
 
 	Run();
 
-	std::system("cls");
-	std::cout << "\n\n\tGAME OVER\n\n";
+	if constexpr (!IS_TEST)
+	{
+		std::system("cls");
+		std::cout << "\n\n\tGAME OVER\n\n";
+	}
 	game_status_->Draw();
-	std::cout << "\n\n    Press enter to close\n";
+	if constexpr (!IS_TEST)
+	{
+		std::cout << "\n\n    Press enter to close\n";
 
-	while (!(GetAsyncKeyState(VK_RETURN) & 0x8000));
+		while (!(GetAsyncKeyState(VK_RETURN) & 0x8000));
+	}
 }
 
 void GameLoop::Run()
@@ -95,6 +106,7 @@ void GameLoop::Run()
 		using namespace std::chrono_literals;
 		std::this_thread::sleep_for(16.667ms);
 
-		std::system("cls");
+		if constexpr(!IS_TEST)
+			std::system("cls");
 	}
 }
